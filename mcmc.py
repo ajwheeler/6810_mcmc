@@ -51,7 +51,30 @@ class sampler:
                     positions[w] += step
             yield positions
 
-    def cornerplot(self, ranges=None):
+    def corner(self, ranges=None, true_vals=None):
         """return plt fig of cornerplot"""
-        import corner #import here so class can be used without this dependancy
-        return corner.corner(self.get_flat_chain(), range=ranges)
+        #import here so class can be used without this dependancy
+        import corner
+
+        return corner.corner(self.get_flat_chain(), range=ranges, truths=true_vals)
+
+    def trace(self, walker, ranges=None, true_vals=None):
+        """return plt fig containing trace plot of walker"""
+        #import here so class can be used without this dependancy
+        import matplotlib.pyplot as plt
+
+        #get traceplot range
+        xs = range(self._chain.shape[0])
+
+        #initialize the figure, choose it's size
+        fig = plt.figure(figsize=(20,3 * self._dim))
+
+        for i in xrange(self._dim):
+            plt.subplot(self._dim,1,i)
+            ys = self._chain[:, walker, i]
+            plt.plot(xs,self._chain[:, walker, i], marker=',')
+
+            if true_vals:
+                plt.plot([xs[0], xs[-1]], [true_vals[i], true_vals[i]])
+
+        return fig
