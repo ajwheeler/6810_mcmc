@@ -26,7 +26,7 @@ class sampler:
         """returns chain that has been flattened to (samplers * walkers), parameters"""
         ns, nw, d = self._chain.shape
         return self._chain.reshape((nw*ns, d))
-.
+
     def sample(self, theta0, nsample):
         """generator for nsample iterations of walker positions, starting at theta0"""
         positions = np.array(theta0)
@@ -50,3 +50,8 @@ class sampler:
                 if alpha > 1 or np.random.rand() < alpha:
                     positions[w] += step
             yield positions
+
+    def cornerplot(self, ranges=None):
+        """return plt fig of cornerplot"""
+        import corner #import here so class can be used without this dependancy
+        return corner.corner(self.get_flat_chain(), range=ranges)
