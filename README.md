@@ -1,4 +1,6 @@
 # 6810_mcmc
+https://github.com/ajwheeler/6810_mcmc
+
 Programmer: Adam Wheeler
 
 Simple MCMC sampler for Physics 6810 at OSU.
