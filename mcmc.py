@@ -1,18 +1,6 @@
-# Programmer: Adam Wheeler
-# for physics 6810 at OSU
-#
-# to-do list:
-#  - multithreding
-#  - autocorrelation time
-#
-# this API is heavilly influenced by emcee
-# http://dan.iel.fm/emcee/current/api/
-
 import numpy as np
 
 class sampler:
-
-    #TODO make multithreaded?
     def __init__(self, lnprob, nwalkers, dim, stepsize=1):
         self._lnprob = lnprob
         self._nwalkers = nwalkers
