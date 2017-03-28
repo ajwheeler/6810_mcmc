@@ -1,6 +1,7 @@
 import numpy as np
 
 class sampler:
+    """Simple MCMC sampler"""
     def __init__(self, lnprob, nwalkers, dim, stepsize=1):
         self._lnprob = lnprob
         self._nwalkers = nwalkers
@@ -8,6 +9,7 @@ class sampler:
         self._stepsize = stepsize
 
     def run(self, theta0, nburnin, nsample):
+        """Run and save a chain of length nsample"""
         #TODO make not horrible
         for pos in self.sample(theta0, nburnin):
             theta0 = pos
@@ -17,13 +19,16 @@ class sampler:
             self._chain[i] = pos
 
     def get_chain(self):
+        """returns 3-axis chain.  Axes are: sample number, walker, parameter"""
         return self._chain
 
     def get_flat_chain(self):
+        """returns chain that has been flattened to (samplers * walkers), parameters"""
         ns, nw, d = self._chain.shape
         return self._chain.reshape((nw*ns, d))
-
+.
     def sample(self, theta0, nsample):
+        """generator for nsample iterations of walker positions, starting at theta0"""
         positions = np.array(theta0)
         yield positions
 
