@@ -14,18 +14,28 @@ class sampler:
         for pos in self.sample(theta0, nburnin):
             theta0 = pos
 
+        accepted = 0
+
         self._chain = np.empty((nsample, self._nwalkers, self._dim))
         for i, pos in enumerate(self.sample(theta0, nsample)):
             self._chain[i] = pos
 
-    def get_chain(self):
+            accepted += sum((self._chain[i] != self._chain[i-1]).any(axis=1))
+
+        self._acceptance = float(accepted)/float(nsample * self._nwalkers)
+
+    def chain(self):
         """returns 3-axis chain.  Axes are: sample number, walker, parameter"""
         return self._chain
 
-    def get_flat_chain(self):
+    def flat_chain(self):
         """returns chain that has been flattened to (samplers * walkers), parameters"""
         ns, nw, d = self._chain.shape
         return self._chain.reshape((nw*ns, d))
+
+    def acceptance_ratio(self):
+        """return fraction of times the proposed step for a walker is excepted"""
+        return self._acceptance
 
     def sample(self, theta0, nsample):
         """generator for nsample iterations of walker positions, starting at theta0"""
@@ -56,7 +66,7 @@ class sampler:
         #import here so class can be used without this dependancy
         import corner
 
-        return corner.corner(self.get_flat_chain(), range=ranges, truths=true_vals)
+        return corner.corner(self.flat_chain(), range=ranges, truths=true_vals)
 
     def trace(self, walker, ranges=None, true_vals=None):
         """return plt fig containing trace plot of walker"""
@@ -64,7 +74,7 @@ class sampler:
         import matplotlib.pyplot as plt
 
         #get traceplot range
-        xs = range(self._chain.shape[0])
+        xs = range(self.chain().shape[0])
 
         #initialize the figure, choose it's size
         fig = plt.figure(figsize=(20,3 * self._dim))
@@ -72,7 +82,7 @@ class sampler:
         for i in xrange(self._dim):
             plt.subplot(self._dim,1,i)
             ys = self._chain[:, walker, i]
-            plt.plot(xs,self._chain[:, walker, i], marker=',')
+            plt.plot(xs,self.chain()[:, walker, i], marker=',')
 
             if true_vals:
                 plt.plot([xs[0], xs[-1]], [true_vals[i], true_vals[i]])
