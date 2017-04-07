@@ -9,7 +9,7 @@ n-dimensional posterior distribution given a likelihood function.
 ## Done
  - functional sampler
  - methods to automatically generate trace and corner plots
- - test on a simple bivariate Gaussian 
+ - test on a simple bivariate Gaussian
 
 ## to-do list:
  - multi-threading
@@ -19,3 +19,8 @@ n-dimensional posterior distribution given a likelihood function.
  - test on a more interesting problem
 
 this API is heavily influenced by that of [emcee](http://dan.iel.fm/emcee/current/api/).
+
+## Dependancies
+ - `numpy`
+ - `matplotlib` is required for both the plotting methods
+ - `corner.py` is required to generate corner plots
