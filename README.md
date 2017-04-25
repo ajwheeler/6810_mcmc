@@ -10,12 +10,12 @@ n-dimensional posterior distribution given a likelihood function.
  - functional sampler
  - methods to automatically generate trace and corner plots
  - test on a simple bivariate Gaussian
+ - use to estimate coefficients of series expansion from noisy data (`series.py`)
+ - method to calculate autocorrelation time
 
 ## to-do list:
  - multi-threading
- - autocorrelation time?
  - ensemble sampling?
- - test on more interesting problem
 
 this API is heavily influenced by that of [emcee](http://dan.iel.fm/emcee/current/api/).
 
