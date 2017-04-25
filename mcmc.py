@@ -10,7 +10,7 @@ class sampler:
 
     def run(self, theta0, nburnin, nsample):
         """Run and save a chain of length nsample"""
-        #TODO make not horrible
+        #burnin
         for pos in self.sample(theta0, nburnin):
             theta0 = pos
 
@@ -61,15 +61,35 @@ class sampler:
                     positions[w] += step
             yield positions
 
-    def corner(self, ranges=None, true_vals=None):
-        """return plt fig of cornerplot"""
+    def autocorrelation(self):
+        """autocorrelation for each parameter in current chain"""
+        flatchain = self.flat_chain()
+        _, length = flatchain.shape
+
+        s = np.empty(self._dim)
+        ss = np.empty(self._dim)
+        aa = np.empty(self._dim)
+        for i in xrange(length-1):
+            s += flatchain[i]
+            ss += flatchain[i]**2
+            aa += flatchain[i]*flatchain[i+1]
+        s /= length
+        ss /= length
+        aa /= length
+
+        return (aa - s**2)/(ss - s**2)
+
+
+
+    def corner(self, ranges=None, true_vals=None, labels=None):
+        """return plt fig of cornerplot of current chain"""
         #import here so class can be used without this dependancy
         import corner
-
-        return corner.corner(self.flat_chain(), range=ranges, truths=true_vals)
+        return corner.corner(self.flat_chain(), range=ranges, truths=true_vals,
+                             labels=labels, show_titles=True if labels else False)
 
     def trace(self, walker, ranges=None, true_vals=None):
-        """return plt fig containing trace plot of walker"""
+        """return plt fig containing trace plot of walker from current chain"""
         #import here so class can be used without this dependancy
         import matplotlib.pyplot as plt
 
