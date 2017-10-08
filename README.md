@@ -19,7 +19,7 @@ n-dimensional posterior distribution given a likelihood function.
 
 this API is heavily influenced by that of [emcee](http://dan.iel.fm/emcee/current/api/).
 
-## Dependancies
+## Dependencies
  - `numpy`
  - `matplotlib` is required for both the plotting methods
  - `corner.py` is required to generate corner plots
